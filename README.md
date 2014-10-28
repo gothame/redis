@@ -71,3 +71,26 @@ As this view is used for the Redis heap, failure to remap is a fatal error. (See
 Solution:
 If you encounter this problem, host Redis on Windows 8/Server 2012 or newer.
 
+在redis里面加入geo支持，参考了Dynamic Redis，
+https://matt.sh/dynamic-redis
+融合，https://github.com/mattsta/krmt里面geo代码
+登录上redis测试如下：
+
+添加地址 geoadd nyc 40.7648057 -73.9733487 名称
+
+例如：
+
+geoadd nyc 40.7648057 -73.9733487 central 40.7362513 -73.9903085 union 40.7126674 -74.0131604 wtc
+
+geoadd nyc 40.6428986 -73.7858139 jfk 40.7498929 -73.9375699 q4 40.7480973 -73.9564142 4545
+
+zrange nyc 0 -1
+
+查找地址附近的
+
+georadius nyc 40.7598464 -73.9798091 3 km
+
+按地址名查找
+
+georadiusbymember nyc wtc 7 km
+
