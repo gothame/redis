@@ -55,6 +55,7 @@
 #include <float.h>
 #include <math.h>
 #include <locale.h>
+#include "geo\geo.h"
 
 #ifdef _WIN32
 #include "Win32_Interop\Win32_FDAPI.h"
@@ -282,7 +283,12 @@ struct redisCommand redisCommandTable[] = {
     {"pfcount",pfcountCommand,-2,"w",0,NULL,1,1,1,0,0},
     {"pfmerge",pfmergeCommand,-2,"wm",0,NULL,1,-1,1,0,0},
     {"pfdebug",pfdebugCommand,-3,"w",0,NULL,0,0,0,0,0},
-    {"latency",latencyCommand,-2,"arslt",0,NULL,0,0,0,0,0}
+    {"latency",latencyCommand,-2,"arslt",0,NULL,0,0,0,0,0},
+	{"geoadd", geoAddCommand, -5, "wm", 0, NULL, 1, 1, 1, 0, 0},
+	{ "georadius", geoRadiusCommand, -6, "r", 0, NULL, 1, 1, 1, 0, 0 },
+	{ "georadiusbymember", geoRadiusByMemberCommand, -5, "r", 0, NULL, 1, 1, 1, 0, 0 },
+	{ "geoencode", geoEncodeCommand, -3, "r", 0, NULL, 0, 0, 0, 0, 0 },
+	{ "geodecode", geoDecodeCommand, -2, "r", 0, NULL, 0, 0, 0, 0, 0 },
 };
 
 /*============================ Utility functions ============================ */
@@ -1481,6 +1487,7 @@ void initServerConfig(void) {
     server.commands = dictCreate(&commandTableDictType,NULL);
     server.orig_commands = dictCreate(&commandTableDictType,NULL);
     populateCommandTable();
+
     server.delCommand = lookupCommandByCString("del");
     server.multiCommand = lookupCommandByCString("multi");
     server.lpushCommand = lookupCommandByCString("lpush");
