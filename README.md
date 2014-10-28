@@ -94,3 +94,25 @@ georadius nyc 40.7598464 -73.9798091 3 km
 
 georadiusbymember nyc wtc 7 km
 
+在python里面使用geo，和原来的接口差不多，redis-py需要修改， redis/client.py文件，加入下面的代码：
+
+    def geo_add(self,key,x,y,name):
+        pieces = ['geoadd', key, x, y,name]
+        return self.execute_command(*pieces)
+    def georadius(self,key,x,y,n,unit):
+        #georadius nyc 40.7598464 -73.9798091 3 km
+        pieces = ['georadius', key, x, y,n,unit]
+        return self.execute_command(*pieces)
+    def georadiusbymember(self,key,name,n,unit):
+        #georadiusbymember nyc wtc 7 km
+        pieces = ['georadiusbymember', key, name,n,unit]
+        return self.execute_command(*pieces)
+调用如下：
+
+    r.geo_add('nyc','40.7648057','-73.9733487','central')
+    r.geo_add('nyc','40.7362513','-73.9903085','union')
+    r.geo_add('nyc','40.7126674','-74.0131604','wtc')
+    v= r.georadius('nyc','40.7598464','-73.9798091', '3', 'km')
+    print v
+    v=r.georadiusbymember('nyc','wtc','7','km')
+    print v
